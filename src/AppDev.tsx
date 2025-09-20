@@ -5,7 +5,7 @@ import {
   Route,
   Navigate,
 } from "react-router-dom";
-import { AuthProvider, useAuth } from "./contexts/AuthContext";
+import { AuthProviderDev } from "./contexts/AuthContextDev";
 import Layout from "./components/Layout/Layout";
 
 // Pages
@@ -19,45 +19,21 @@ import BookService from "./pages/BookService";
 import DashboardDev from "./pages/dev/DashboardDev";
 import BookServiceDev from "./pages/dev/BookServiceDev";
 
-// Protected Route Component
+// Mock Protected Route Component (always allows access)
 const ProtectedRoute: React.FC<{ children: React.ReactNode }> = ({
   children,
 }) => {
-  const { isAuthenticated, isLoading } = useAuth();
-
-  if (isLoading) {
-    return (
-      <div className="min-h-screen flex items-center justify-center">
-        <div className="animate-spin rounded-full h-32 w-32 border-b-2 border-blue-600"></div>
-      </div>
-    );
-  }
-
-  return isAuthenticated ? <>{children}</> : <Navigate to="/login" replace />;
+  return <>{children}</>;
 };
 
-// Public Route Component (redirect to dashboard if authenticated)
+// Mock Public Route Component (always allows access)
 const PublicRoute: React.FC<{ children: React.ReactNode }> = ({ children }) => {
-  const { isAuthenticated, isLoading } = useAuth();
-
-  if (isLoading) {
-    return (
-      <div className="min-h-screen flex items-center justify-center">
-        <div className="animate-spin rounded-full h-32 w-32 border-b-2 border-blue-600"></div>
-      </div>
-    );
-  }
-
-  return isAuthenticated ? (
-    <Navigate to="/dashboard" replace />
-  ) : (
-    <>{children}</>
-  );
+  return <>{children}</>;
 };
 
-function App() {
+function AppDev() {
   return (
-    <AuthProvider>
+    <AuthProviderDev>
       <Router>
         <div className="App">
           <Routes>
@@ -80,7 +56,7 @@ function App() {
               }
             />
 
-            {/* Protected Routes */}
+            {/* Protected Routes (now accessible without auth) */}
             <Route
               path="/dashboard"
               element={
@@ -107,8 +83,8 @@ function App() {
           </Routes>
         </div>
       </Router>
-    </AuthProvider>
+    </AuthProviderDev>
   );
 }
 
-export default App;
+export default AppDev;
